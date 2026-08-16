@@ -1,6 +1,6 @@
 # multi-tenant-saas
 
-A multi-tenant SaaS API in Go, built for a starting scale of ~100k users with a documented path to scale further. Tenants are isolated at the database layer via `tenant_id` + Postgres Row-Level Security. Full architecture and rationale: [`PROJECT_PLAN.md`](PROJECT_PLAN.md). Guidance for working on this repo with Claude Code: [`CLAUDE.md`](CLAUDE.md), [`skills.md`](skills.md).
+A multi-tenant SaaS API in Go, built for a starting scale of ~100k users with a documented path to scale further. Tenants are isolated at the database layer via `tenant_id` + Postgres Row-Level Security. Full architecture and rationale: [`PROJECT_PLAN.md`](PROJECT_PLAN.md); a visual walkthrough of the request path and tenant-isolation mechanism: [`docs/architecture.html`](docs/architecture.html) (open in a browser). Guidance for working on this repo with Claude Code: [`CLAUDE.md`](CLAUDE.md), [`skills.md`](skills.md).
 
 **Status**: scaffold stage. One demo route (`/v1/ping`) shows the required tenant-scoping pattern; there's no real authentication yet. See "Future Enhancements" below.
 
