@@ -9,10 +9,10 @@ import (
 	"syscall"
 	"time"
 
-	"multitenantsaas/internal/cache"
-	"multitenantsaas/internal/config"
-	"multitenantsaas/internal/db"
-	"multitenantsaas/internal/server"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/cache"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/config"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/db"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/server"
 )
 
 func main() {

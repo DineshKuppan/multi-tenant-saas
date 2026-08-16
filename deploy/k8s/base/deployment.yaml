@@ -16,7 +16,10 @@ spec:
     spec:
       containers:
         - name: api
-          image: multitenantsaas-api:latest
+          # CI (.github/workflows/ci.yml) publishes here on every merge to
+          # main. Override via `kustomize edit set image` in a deploy
+          # pipeline if pinning to a specific tag/digest instead of :latest.
+          image: ghcr.io/dineshkuppan/multi-tenant-saas:latest
           ports:
             - containerPort: 8080
           env:

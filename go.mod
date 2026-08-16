@@ -1,4 +1,4 @@
-module multitenantsaas
+module github.com/DineshKuppan/multi-tenant-saas
 
 go 1.25.0
 

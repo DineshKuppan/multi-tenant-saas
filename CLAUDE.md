@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The Go module is scaffolded (`cmd/api`, `internal/{config,db,cache,tenant,middleware,server}`), containerized, and verified end-to-end against Postgres + Redis via docker-compose, including a real RLS-enforced migration. It implements one demo route (`/v1/ping`) that shows the required tenant-scoping pattern — real domain features still need to be built. The architecture and technology decisions below (see `PROJECT_PLAN.md` for full rationale) are fixed starting points, not open choices to re-litigate.
 
-Module path is the local placeholder `multitenantsaas` (no GitHub org confirmed yet); renaming it later is a repo-wide `sed` across import paths.
+Module path is `github.com/DineshKuppan/multi-tenant-saas`, matching the repo at `git@github.com:DineshKuppan/multi-tenant-saas.git`.
 
 ## Commands
 
@@ -19,7 +19,8 @@ Module path is the local placeholder `multitenantsaas` (no GitHub org confirmed 
 - `make migrate-up` / `make migrate-down DATABASE_URL=...` — needs the `migrate` CLI (golang-migrate) installed separately; not a Go module dependency
 - `make docker-up` / `make docker-down` — full stack (api + postgres + redis) via docker-compose. Host ports are remapped to 5433 (postgres) and 6380 (redis) to avoid colliding with services that may already be running on the host; container-to-container traffic still uses 5432/6379 internally.
 - After `docker-up`, the schema isn't applied automatically yet — run migrations manually: `docker compose exec -T postgres psql -U postgres -d app -f - < migrations/000001_init_schema.up.sql` (or via `make migrate-up` if the `migrate` CLI is installed). Automating this is an open item, not yet decided (in-binary `go:embed` migrations vs. an init container vs. a CI/CD step).
-- `kubectl kustomize deploy/k8s/base` (or `overlays/staging`, `overlays/production`) — render manifests; `kubectl apply -k <same path>` to apply. Manifests pin `multitenantsaas-api:latest`; there's no registry/CI wiring yet, so that only works against a local cluster's image cache.
+- `kubectl kustomize deploy/k8s/base` (or `overlays/staging`, `overlays/production`) — render manifests; `kubectl apply -k <same path>` to apply. Manifests pin `ghcr.io/dineshkuppan/multi-tenant-saas:latest`.
+- CI (`.github/workflows/ci.yml`, GitHub Actions): `go vet`/`build`/`test`/`golangci-lint` on every push and PR to `main`; on merge to `main`, builds and pushes the image to `ghcr.io/dineshkuppan/multi-tenant-saas` (`:latest` and `:<sha>`) using the built-in `GITHUB_TOKEN` — no manually configured registry credentials. The image path is lowercased in the workflow (`tr '[:upper:]' '[:lower:]'` on `github.repository`) since ghcr.io rejects uppercase, even though the GitHub repo itself is `DineshKuppan/multi-tenant-saas`. There is no CD step; rolling a new image out to a cluster is still a manual `kubectl apply -k`.
 
 ## Fixed architectural decisions
 
@@ -42,4 +43,4 @@ Any code that reads or writes tenant-owned data must be scoped by `tenant_id` de
 
 ## Reference
 
-Full architecture, scaling roadmap (Phase 1/2/3), and open implementation decisions still to be made (web framework, migration tool, CI/CD provider) live in `PROJECT_PLAN.md`. Read it before scaffolding the initial project structure.
+Full architecture, scaling roadmap (Phase 1/2/3), and remaining open implementation decisions live in `PROJECT_PLAN.md`.

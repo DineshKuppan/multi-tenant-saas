@@ -81,13 +81,14 @@ Modular monolith, single Postgres instance, manual scaling. Priority is correct 
 
 - **Web framework/router**: stdlib `net/http` (Go 1.22+ `ServeMux`), no third-party router — kept dependencies minimal for the initial scaffold.
 - **Migration tool**: `golang-migrate` CLI against plain SQL files in `migrations/`, run as an ops step rather than embedded in the binary.
-- **Module path**: local placeholder `multitenantsaas` — no GitHub org was confirmed, so this needs a rename once the repo has a real hosting location.
+- **Module path**: `github.com/DineshKuppan/multi-tenant-saas`, matching the repo at `git@github.com:DineshKuppan/multi-tenant-saas.git`.
+- **CI**: GitHub Actions (`.github/workflows/ci.yml`). Lint/test/build on every push and PR to `main`; on merge to `main`, build and push the image to GitHub Container Registry as `ghcr.io/dineshkuppan/multi-tenant-saas` using the built-in `GITHUB_TOKEN` — no separate registry account/credentials to manage. The image path is lowercased in the workflow since ghcr.io rejects uppercase, even though the GitHub repo itself is `DineshKuppan/multi-tenant-saas`. Chosen over Docker Hub specifically to avoid a second account/secret; chosen over adding a CD/auto-deploy step because there's no live cluster yet to deploy to safely.
 - Schema is not yet applied automatically on `docker-compose up`; that's an open item (see below).
 
 ## Open Decisions (to make at implementation time, not guessed here)
 
-- CI/CD pipeline provider and pipeline definition.
+- Continuous deployment: CI publishes images to GHCR but nothing applies them to a cluster automatically. Add a deploy job once a real cluster and credentials exist — likely `kubectl apply -k deploy/k8s/overlays/staging` on merge to `main`, `overlays/production` gated on a tag or manual approval.
 - Billing/subscription integration, if applicable.
 - How migrations get applied automatically (init container, `go:embed` + in-binary migration on startup, or a CI/CD step) — currently a manual `psql`/`migrate` invocation.
 - Real authentication/JWT issuance and validation — `internal/middleware.DevOnlyTenantFromHeader` is a dev-only placeholder, not a design for the real auth path.
-- How the deployment image gets from CI into `deploy/k8s/base/deployment.yaml` (currently pins `multitenantsaas-api:latest`, fine for a local cluster but not a real registry-backed pipeline).
+- `deploy/k8s/base/deployment.yaml` pins `ghcr.io/dineshkuppan/multi-tenant-saas:latest` — fine for now, but a pinned digest/sha tag would be safer than `:latest` for anything beyond a dev cluster.

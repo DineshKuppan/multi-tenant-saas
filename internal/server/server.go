@@ -8,9 +8,9 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"multitenantsaas/internal/db"
-	"multitenantsaas/internal/middleware"
-	"multitenantsaas/internal/tenant"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/db"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/middleware"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/tenant"
 )
 
 func New(database *db.DB, redisClient *redis.Client, logger *slog.Logger) http.Handler {

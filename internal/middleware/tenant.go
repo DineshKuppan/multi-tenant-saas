@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"multitenantsaas/internal/tenant"
+	"github.com/DineshKuppan/multi-tenant-saas/internal/tenant"
 )
 
 // DevOnlyTenantFromHeader reads the tenant ID from a plain header so local
