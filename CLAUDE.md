@@ -19,6 +19,7 @@ Module path is the local placeholder `multitenantsaas` (no GitHub org confirmed 
 - `make migrate-up` / `make migrate-down DATABASE_URL=...` — needs the `migrate` CLI (golang-migrate) installed separately; not a Go module dependency
 - `make docker-up` / `make docker-down` — full stack (api + postgres + redis) via docker-compose. Host ports are remapped to 5433 (postgres) and 6380 (redis) to avoid colliding with services that may already be running on the host; container-to-container traffic still uses 5432/6379 internally.
 - After `docker-up`, the schema isn't applied automatically yet — run migrations manually: `docker compose exec -T postgres psql -U postgres -d app -f - < migrations/000001_init_schema.up.sql` (or via `make migrate-up` if the `migrate` CLI is installed). Automating this is an open item, not yet decided (in-binary `go:embed` migrations vs. an init container vs. a CI/CD step).
+- `kubectl kustomize deploy/k8s/base` (or `overlays/staging`, `overlays/production`) — render manifests; `kubectl apply -k <same path>` to apply. Manifests pin `multitenantsaas-api:latest`; there's no registry/CI wiring yet, so that only works against a local cluster's image cache.
 
 ## Fixed architectural decisions
 

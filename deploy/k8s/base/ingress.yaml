@@ -1,0 +1,26 @@
+# Assumes an nginx-ingress-controller (or compatible) is already installed
+# in the cluster. Adjust ingressClassName and host per environment via the
+# staging/production overlays.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - api.example.com
+      secretName: api-tls

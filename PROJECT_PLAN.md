@@ -90,4 +90,4 @@ Modular monolith, single Postgres instance, manual scaling. Priority is correct 
 - Billing/subscription integration, if applicable.
 - How migrations get applied automatically (init container, `go:embed` + in-binary migration on startup, or a CI/CD step) — currently a manual `psql`/`migrate` invocation.
 - Real authentication/JWT issuance and validation — `internal/middleware.DevOnlyTenantFromHeader` is a dev-only placeholder, not a design for the real auth path.
-- Kubernetes manifests (Deployment/Service/Ingress/HPA) have not been written yet — only Docker/docker-compose exist so far.
+- How the deployment image gets from CI into `deploy/k8s/base/deployment.yaml` (currently pins `multitenantsaas-api:latest`, fine for a local cluster but not a real registry-backed pipeline).
