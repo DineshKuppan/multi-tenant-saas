@@ -39,7 +39,7 @@ func main() {
 		logger.Error("redis connect failed", "error", err)
 		os.Exit(1)
 	}
-	defer redisClient.Close()
+	defer func() { _ = redisClient.Close() }()
 
 	httpServer := &http.Server{
 		Addr:              ":" + cfg.Port,

@@ -41,7 +41,7 @@ func (d *DB) WithTenant(ctx context.Context, tenantID string, fn func(ctx contex
 	if err != nil {
 		return fmt.Errorf("db: begin tx: %w", err)
 	}
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	if _, err := tx.Exec(ctx, "SELECT set_config('app.tenant_id', $1, true)", tenantID); err != nil {
 		return fmt.Errorf("db: set tenant context: %w", err)

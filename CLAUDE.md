@@ -14,7 +14,7 @@ Module path is `github.com/DineshKuppan/multi-tenant-saas`, matching the repo at
 - `make run` — run locally (needs `DATABASE_URL` and, optionally, `REDIS_ADDR`/`PORT` env vars set — see `docker-compose.yml` for example values)
 - `make test` — `go test ./...`
 - `make test-one PKG=./internal/tenant RUN=TestFromContext` — run a single test
-- `make lint` — `golangci-lint run ./...` (not vendored; install separately)
+- `make lint` — `golangci-lint run ./...` (not vendored; install separately). `.golangci.yml` uses the v2 config schema (`version: "2"`) — install golangci-lint v2.x (CI pins `v2.12.2`), a v1.x binary will fail with `can't load config: unsupported version`.
 - `make fmt` — `gofmt -l -w .`
 - `make migrate-up` / `make migrate-down DATABASE_URL=...` — needs the `migrate` CLI (golang-migrate) installed separately; not a Go module dependency
 - `make docker-up` / `make docker-down` — full stack (api + postgres + redis) via docker-compose. Host ports are remapped to 5433 (postgres) and 6380 (redis) to avoid colliding with services that may already be running on the host; container-to-container traffic still uses 5432/6379 internally.
